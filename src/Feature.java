@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public interface Feature {
 	public void ifContains_de(String[] str, int index);
 	public void ifContains_en(String[] str, int index);

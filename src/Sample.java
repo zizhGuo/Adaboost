@@ -1,25 +1,34 @@
 import java.util.ArrayList;
+import java.math.BigDecimal;
 
-public class Sample implements Feature{
+public class Sample implements Feature, Label{
 	
 	ArrayList<String> raw;
 	int numofSamples;
 	final int numofFeatures = 10;
 	ArrayList<String[]> sentence;
-	double[] weightsSp;
+	ArithmeticUtils utils;
 	
 	// The true-false table for building the hypothesis.
 	double[][] samples;
 	
+	// Dynamic changed Sample Weights
+	double[] weightsSp;
+	
+	// The label for samples
+	double[] labels;
+	
 	public Sample (int num) {
+		this.utils = new ArithmeticUtils();
 		this.numofSamples = num;
 		this.raw = new ArrayList<String>();
 		this.samples = new double[num][numofFeatures];
 		this.sentence = new ArrayList<String[]>();
 		this.weightsSp = new double[numofSamples];
+		this.labels = new double[numofSamples];
 		
 		for(int i = 0; i < numofSamples; i++) {
-			weightsSp[i] = 1.0/(double)numofSamples;
+			weightsSp[i] = utils.div(1.00, (double)numofSamples, 2);
 		}
 
 	}
@@ -33,9 +42,13 @@ public class Sample implements Feature{
 	public void print() {
 		//System.out.println("de    en    een");
 		for (int i = 0; i < numofSamples; i++) {
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < numofFeatures + 1; j++) {
 				// 4 spaces between each value.
-				System.out.print(samples[i][j] + "    ");
+				if (j < numofFeatures)
+					System.out.print(samples[i][j] + "    ");
+				else
+					System.out.print(labels[i] + "    ");
+					
 			}
 			System.out.println();
 		}
@@ -66,6 +79,26 @@ public class Sample implements Feature{
 			this.ifContains_die(this.sentence.get(i), i);
 			this.consonantsMoreThanFive(this.sentence.get(i), i);
 //			this.averageLengthMoreThanFive(this.sentence.get(i), i);
+		}
+	}
+	
+	public void getLables() {
+		
+		System.out.println("what?");
+		for (int i = 0; i < this.sentence.size(); i++) {
+			String[] strings = this.sentence.get(i);
+			int length = strings.length;
+			for (int j = 0; j < length; j++)
+				System.out.print(strings[j] + "  ");
+			
+			
+			if (strings[length - 1].contains("true")) {
+				labels[i] = weightsSp[i];
+			}
+			else {
+				labels[i] = 0.0;
+			}
+			System.out.println(" ");
 		}
 	}
 	public void ifContains_de(String[] str, int indexSp) {

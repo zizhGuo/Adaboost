@@ -22,7 +22,9 @@ public class Wiki {
 	            	samples.append(line);            	
 	            }
 	            samples.process();
+	            samples.getLables();
 	            samples.getFeatures();
+	            
 	            samples.print();
 	            //samples.print();
 	            //samples.getFeatures();
