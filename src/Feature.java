@@ -7,7 +7,7 @@ public interface Feature {
 	public void ifContains_op(String[] str, int index);
 	public void ifContains_ij(String[] str, int index);
 	public void ifContains_die(String[] str, int index);
-	public void consonantsMoreThanFive(String[] str, int index);
+	public void consonantsMoreThanThreepointFive(String[] str, int index);
 	public void averageLengthMoreThanFive(String[] str, int index);
 	
 }

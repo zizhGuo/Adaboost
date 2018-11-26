@@ -1,4 +1,4 @@
 
 public interface Label {
-	public void getLables();
+	public void setLables();
 }

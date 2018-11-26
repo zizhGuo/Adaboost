@@ -36,6 +36,22 @@ public class Sample implements Feature, Label{
 		return numofFeatures;
 	}
 	
+	public int getNumOfSamples() {
+		return numofSamples;
+	}
+	
+	public double[][] getSamples(){
+		return samples;
+	}
+	
+	public double[] getLabels(){
+		return labels;
+	}
+	
+	public double[] getWeightsSp() {
+		return weightsSp;
+	}
+	
 	public void append(String str) {
 		raw.add(str);
 	}
@@ -57,7 +73,7 @@ public class Sample implements Feature, Label{
 	/*
 	 * This function is used for process input string.
 	 */
-	public void process() {
+	public void setData() {
 		for (int i = 0; i < this.raw.size(); i++) {
 			String[] str = raw.get(i).split(" ");
 			this.sentence.add(str); 
@@ -67,7 +83,7 @@ public class Sample implements Feature, Label{
 		}
 	}
 	
-	public void getFeatures() {
+	public void setFeatures() {
 		for (int i = 0; i < sentence.size(); i++) {
 			this.ifContains_de(this.sentence.get(i), i);
 			this.ifContains_en(this.sentence.get(i), i);
@@ -77,12 +93,12 @@ public class Sample implements Feature, Label{
 			this.ifContains_op(this.sentence.get(i), i);
 			this.ifContains_ij(this.sentence.get(i), i);
 			this.ifContains_die(this.sentence.get(i), i);
-			this.consonantsMoreThanFive(this.sentence.get(i), i);
-//			this.averageLengthMoreThanFive(this.sentence.get(i), i);
+			this.averageLengthMoreThanFive(this.sentence.get(i), i);
+			this.consonantsMoreThanThreepointFive(this.sentence.get(i), i);
 		}
 	}
 	
-	public void getLables() {
+	public void setLables() {
 		
 		System.out.println("what?");
 		for (int i = 0; i < this.sentence.size(); i++) {
@@ -178,7 +194,7 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
-	public void consonantsMoreThanFive(String[] str, int indexSp) {
+	public void averageLengthMoreThanFive(String[] str, int indexSp) {
 		double length = 0;
 		for (int i = 0; i < str.length; i++) {
 			length += str[i].length();
@@ -188,7 +204,25 @@ public class Sample implements Feature, Label{
 			samples[indexSp][8] = weightsSp[indexSp];
 		}
 	}
-	public void averageLengthMoreThanFive(String[] str, int index) {
+	public void consonantsMoreThanThreepointFive(String[] str, int indexSp) {
+		double size = 0;
+		double count = 0;
+		double count_total = 0;
+		for (int i = 0; i < str.length; i++) {
+			size++;
+			count_total += str[i].length();
+			for (int j = 0; j < str[i].length(); j++) {
+				 char ch = str[i].charAt(j);
+				 if (ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U' || 
+						 ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
+					 count++;
+				 }
+			}
+		}
+		System.out.println("The size: " + size);
+		System.out.println("The count: " + count);
 		
+		if (((count_total - count)/size) >= 3.5 )
+			samples[indexSp][9] = weightsSp[indexSp];
 	}
 }

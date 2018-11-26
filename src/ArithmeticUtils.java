@@ -181,7 +181,8 @@ public class ArithmeticUtils {
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
-
+    
+    
     /**
      * 
      * 
