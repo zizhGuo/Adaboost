@@ -219,8 +219,8 @@ public class Sample implements Feature, Label{
 				 }
 			}
 		}
-		System.out.println("The size: " + size);
-		System.out.println("The count: " + count);
+		//System.out.println("The size: " + size);
+		//System.out.println("The count: " + count);
 		
 		if (((count_total - count)/size) >= 3.5 )
 			samples[indexSp][9] = weightsSp[indexSp];

@@ -24,11 +24,15 @@ public class Wiki {
 	            samples.setData();
 	            samples.setLables();
 	            samples.setFeatures();
-	            samples.print();
+	            //samples.print();
 	            
-	            Hypotheses hypotheses = new Hypotheses(samples.getNumOfSamples(), samples.getNumOfFeatures());
-	            hypotheses.createDecisionStump(samples.getSamples(), samples.getLabels(), 
-	            		samples.getWeightsSp(), samples.numofFeatures, samples.getNumOfSamples());
+	            Hypotheses hypotheses = new Hypotheses(samples);
+	            hypotheses.printSamples();
+	            hypotheses.adaboost();
+	            hypotheses.print();
+	            hypotheses.printWeightZ();
+	            //hypotheses.createDecisionStump();
+	            //hypotheses.printHypotheses();
 	            //System.out.println(hypotheses.entropy(samples.getLabels(), samples.getNumOfSamples()));
 	           // System.out.println(hypotheses.entropy(samples.getSamples(), 1, samples.getNumOfSamples()));
 	            //samples.print();
