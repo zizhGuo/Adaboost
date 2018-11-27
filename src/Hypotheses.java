@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Hypotheses {
 
 	double[] h;
-	double[] dweightsH;
+	double[] weightsH;
 	
 	int numofSamples;
 	int numofFeatures;
@@ -13,8 +13,8 @@ public class Hypotheses {
 	public Hypotheses(int numofSamples, int numofFeatures) {
 		this.numofSamples = numofSamples;
 		this.numofFeatures = numofFeatures;
-		h = new double[numofSamples];
-		dweightsH = new double[numofFeatures];
+		h = new double[numofSamples]; // why is numOfSamples???
+		weightsH = new double[numofFeatures];
 	}
 	
 	
@@ -72,9 +72,9 @@ public class Hypotheses {
 			 */
 			featuresEntropy[f] = size_labeled/(double)numofSamples*entropy(labels, index_labled, weightsSp, f)
 					+size_unlabeled/(double)numofSamples*entropy(labels, index_unlabled, weightsSp, f);
-		  	
+			
 			// Print out the selected feature's index as the decision stumps.
-			System.out.println("Feature " + f + " Entropy = "+ + featuresEntropy[f]);
+			System.out.println("Feature " + f + " Entropy = "+ featuresEntropy[f]);
 		}
 		
 		double gain = 0;
@@ -86,15 +86,19 @@ public class Hypotheses {
 				stumpIndex = f;
 			}
 		}
+		System.out.println("gain = " + gain);
 		System.out.println("Decision stump index = " + stumpIndex);
 		
 	}
     public double entropy(double[] labels, ArrayList<Integer> index, double[] weightsSp, int indexOfFeatures) {
+    	if (index.size() == 0) return 0;
     	double p = 0.0;
     	double w = 0.0;
     	for (int i = 0; i < index.size(); i++) {
     		p += labels[index.get(i)];
     		w += weightsSp[index.get(i)];
+    		//System.out.print("weights = " + weightsSp[index.get(i)] + "   ");
+    		//System.out.println("");
     	}
     	System.out.println("p = " + p);
     	System.out.println("w = " + w);
@@ -104,6 +108,10 @@ public class Hypotheses {
     	if (p_normalize == 1.0) {
     		return 0.0;
     	}
+    	if (p_normalize == 0.0) {
+    		return 0.0;
+    	}
+    	
     	return -(b.doubleValue())* Math.log(b.doubleValue())/Math.log(2.0) - (1.0 - b.doubleValue())*Math.log(1.0 - b.doubleValue())/Math.log(2.0);
     }
 	
