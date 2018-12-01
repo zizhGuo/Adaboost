@@ -1,6 +1,8 @@
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import org.ietf.jgss.Oid;
+
 public class Hypotheses {
 	
 	// ************************Hypotheses Models*****************************
@@ -29,7 +31,11 @@ public class Hypotheses {
 	// Dynamic changed Sample Weights
 	double[] weightsSp;
 	
+	// ************************Prediction data**********************
 	
+	double[][] predict_data;
+	
+	int numofPredicts;
 	// **************************************************************
 	public Hypotheses(Sample sample) {
 		this.numofSamples = sample.numofSamples;
@@ -37,12 +43,16 @@ public class Hypotheses {
 		this.samples = sample.samples;
 		this.labels = sample.labels;
 		stumpsOrder = new ArrayList<>();
+		this.predict_data = sample.predict_data;
+		this.numofPredicts = sample.numofPredicts;
 		
 		this.weightsSp = sample.weightsSp;
 		
 		hypotheses = new double[sample.numofSamples][sample.numofFeatures]; // why is numOfSamples???
 		labelsSp = new double[sample.numofSamples][sample.numofFeatures];
 		weightsZ = new double[sample.numofFeatures];
+		
+		//initHypothese();
 		
 		
 	}
@@ -58,23 +68,21 @@ public class Hypotheses {
 			System.out.println();
 		}
 	}
-	
-//	public Hypotheses(int numofSamples, int numofFeatures) {
-//		
-//		
-//		
-//		this.numofSamples = numofSamples;
-//		this.numofFeatures = numofFeatures;
-//		h = new double[numofSamples]; // why is numOfSamples???
-//		weightsH = new double[numofFeatures];
-//	}
 //	
+//	// Initialization of the hypothese
+//	public void initHypothese() {
+//		for (int i = 0; i < numofSamples; i++) {
+//			for (int j = 0; j < numofFeatures; j++) {
+//				hypotheses[i][j] = samples[i][j];
+//			}
+//		}
+//	}
 	
 	/**
 	 * L-Algorithm to build the decision stump
 	 * 
 	 */
-	public void createDecisionStump() {
+public void createDecisionStump() {
 		
 		// The entropy of Labels
 		double labelsEntropy;
@@ -160,11 +168,50 @@ public class Hypotheses {
 		
 	}
 	
+
+	public void createStump() {
+		int indexOfStump = 0;
+		double error[] = new double[numofFeatures];
+		
+		
+		// 找出错误率最低的feature
+		for (int f = 0; f < numofFeatures; f++) {
+			if (!stumpsOrder.contains(Integer.valueOf(f))) {
+				for (int s = 0; s < numofSamples; s++) {
+					if (samples[s][f] != labels[s]) {
+						error[f] += labels[s];
+					}
+				}
+			}
+		}
+		
+		int maxIndex = 0;
+		double max = 0.0;
+		for (int f = 0; f < numofFeatures; f++) {
+			//System.out.println(" error rate : " + error[f]);
+			if (error[f] > max) {
+				max = error[f];
+				maxIndex = f;
+			}
+		}
+		
+		// 找出后把该feature加入stumpindex
+		stumpsOrder.add(maxIndex);
+		
+		// 更新hyptheses
+		for (int i = 0; i < numofSamples; i++) {
+			hypotheses[i][maxIndex] = samples[i][maxIndex];
+			labelsSp[i][maxIndex] = labels[i];
+		}
+	}
+	
 	public void adaboost() {
 		for (int k = 0; k < numofFeatures; k++) {
 			//int k = 0;
 			// Create the decistion stump
-			createDecisionStump();
+			//createDecisionStump();
+			createStump();
+			
 			double error = 0;
 			
 			// Calculate the total error
@@ -174,6 +221,7 @@ public class Hypotheses {
 				}
 			}
 			
+			if (error > 0.10 ) {
 			// Update the weights of samples
 			for (int s = 0; s < numofSamples; s++) {
 				if (hypotheses[s][stumpsOrder.get(k)] == labelsSp[s][stumpsOrder.get(k)] ) {
@@ -184,34 +232,54 @@ public class Hypotheses {
 			// Normalize the weights of samples
 			normalizeWeights();
 			System.out.println("error = " + error);
-			for (int s = 0; s < numofSamples; s++) {
-				System.out.println("weightsSP = " + weightsSp[s]);
-			}
+//			for (int s = 0; s < numofSamples; s++) {
+//				System.out.println("weightsSP = " + weightsSp[s]);
+//			}
 			
 			// Update the labels with new weights
 			updateLabels();
 			
 			// Update the samples with new weights
 			updateSamples();
-			if (error == 0) {
-				weightsZ[k] = Math.log(20.0)/Math.log(2.0);
-			}
-			else {
 				double e = (1 - error)/error;
 				BigDecimal b = new BigDecimal(e);
 				
 				// Update the weights for the decision stumps
 				weightsZ[k] = Math.log(b.doubleValue())/Math.log(2.0);
+				//System.out.println(" Weight Z = " + weightsZ[k]);			
+			}
+			else {
+				break;
 			}
 		}
+		normalizedWeightsZ();
+		for (int f = 0; f < stumpsOrder.size();f ++)
+			System.out.println("weightsZ[" + (stumpsOrder.get(f))+ "] = " + weightsZ[stumpsOrder.get(f)]);
 	}
 	
+	
+	public void predictByAdaboostStumps() {
+		double[] total = new double[numofFeatures];
+		
+		for (int s = 0; s < numofPredicts; s++) {
+		{	
+			for (int f = 0; f < numofFeatures; f++)
+				total[s] += predict_data[s][f] * weightsZ[f];
+				
+			}
+		}
+		
+		for (int s = 0; s < numofPredicts; s++) {
+			System.out.println("prediction: " + total[s]);
+				
+		}
+	}
 	/*
 	 * For print out the features.
 	 */
 	public void printWeightZ() {
-		for (int f = 0; f < numofFeatures;f ++)
-			System.out.println("weightsZ[k] = " + weightsZ[f]);
+		for (int f = 0; f < stumpsOrder.size();f ++)
+			System.out.println("weightsZ[" + (stumpsOrder.get(f))+ "] = " + weightsZ[stumpsOrder.get(f)]);
 	}
 	
 	/*
@@ -242,6 +310,16 @@ public class Hypotheses {
 		}
 		for (int s = 0; s < numofSamples; s++) {
 			weightsSp[s] = weightsSp[s]/total;
+		}
+	}
+	
+	public void normalizedWeightsZ() {
+		double total = 0;
+		for (int s = 0; s < numofFeatures; s++) {
+			total += weightsZ[s];
+		}
+		for (int s = 0; s < numofFeatures; s++) {
+			weightsZ[s] = weightsZ[s]/total;
 		}
 	}
 	
@@ -309,7 +387,9 @@ public class Hypotheses {
     	double p = 0.0;
     	for (int i = 0; i < numofSamples; i++) {
     		p += lables[i];
+    		System.out.println("W!!!!!!! " + lables[i]);
     	}
+    	System.out.println("W!!!!!!!!!!!!!!!!!!!!!!!!!: " + p);
     	BigDecimal b = new BigDecimal(p);
     	return -(b.doubleValue())* Math.log(b.doubleValue())/Math.log(2.0) - (1.0 - b.doubleValue())*Math.log(1.0 - b.doubleValue())/Math.log(2.0);
     }
