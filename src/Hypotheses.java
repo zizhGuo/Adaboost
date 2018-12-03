@@ -5,7 +5,11 @@ import org.ietf.jgss.Oid;
 
 public class Hypotheses {
 	
-	// ************************Hypotheses Models*****************************
+	// **************************************** START ******************************************
+	// Here are all variables that are used to create Adaboost Stumps and Decision Tree
+	
+	// ************************Hypotheses Models*******************************
+	
 	// The hypotheses that Adaboost produces, which is used for prediction.
 	double[][] hypotheses;
 	
@@ -15,13 +19,13 @@ public class Hypotheses {
 	// The weights for different hypotheses, which is sued for prediction
 	double[] weightsZ;
 	
-	// ************************Initialization from input**********************
+	// ************************Initialization from input***********************
 	int numofSamples;
 	int numofFeatures;
 	
 	ArrayList<Integer> stumpsOrder;
 	
-	// ********************Dynamically changed weights for samples***********
+	// ********************Dynamically changed weights for samples*************
 	// The true-false table for building the hypothesis.
 	double[][] samples;
 	
@@ -31,12 +35,12 @@ public class Hypotheses {
 	// Dynamic changed Sample Weights
 	double[] weightsSp;
 	
-	// ************************Prediction data**********************
+	// ******************************Prediction data****************************
 	
 	double[][] predict_data;
 	
 	int numofPredicts;
-	// **************************************************************
+	// **************************************** END ******************************************
 	public Hypotheses(Sample sample) {
 		this.numofSamples = sample.numofSamples;
 		this.numofFeatures = sample.numofFeatures;
@@ -68,21 +72,13 @@ public class Hypotheses {
 			System.out.println();
 		}
 	}
-//	
-//	// Initialization of the hypothese
-//	public void initHypothese() {
-//		for (int i = 0; i < numofSamples; i++) {
-//			for (int j = 0; j < numofFeatures; j++) {
-//				hypotheses[i][j] = samples[i][j];
-//			}
-//		}
-//	}
 	
 	/**
-	 * L-Algorithm to build the decision stump
+	 * 
+	 * Create Decision Tree based on Entropy
 	 * 
 	 */
-public void createDecisionStump() {
+	public void createDecisionTree() {
 		
 		// The entropy of Labels
 		double labelsEntropy;
@@ -168,13 +164,15 @@ public void createDecisionStump() {
 		
 	}
 	
-
+	/**
+	 * Create the stumps based on error rate.
+	 */
 	public void createStump() {
 		int indexOfStump = 0;
 		double error[] = new double[numofFeatures];
 		
 		
-		// 找出错误率最低的feature
+		// Find the least error feature as the stump
 		for (int f = 0; f < numofFeatures; f++) {
 			if (!stumpsOrder.contains(Integer.valueOf(f))) {
 				for (int s = 0; s < numofSamples; s++) {
@@ -184,31 +182,33 @@ public void createDecisionStump() {
 				}
 			}
 		}
-		
 		int maxIndex = 0;
 		double max = 0.0;
 		for (int f = 0; f < numofFeatures; f++) {
-			//System.out.println(" error rate : " + error[f]);
 			if (error[f] > max) {
 				max = error[f];
 				maxIndex = f;
 			}
 		}
 		
-		// 找出后把该feature加入stumpindex
+		// Get the index of this stumped feature.
 		stumpsOrder.add(maxIndex);
 		
-		// 更新hyptheses
+		// 
 		for (int i = 0; i < numofSamples; i++) {
 			hypotheses[i][maxIndex] = samples[i][maxIndex];
 			labelsSp[i][maxIndex] = labels[i];
 		}
 	}
 	
+	/**
+	 * Adaboost
+	 * 
+	 * Adaboost to create 10 decision stumps. 
+	 */
 	public void adaboost() {
 		for (int k = 0; k < numofFeatures; k++) {
-			//int k = 0;
-			// Create the decistion stump
+			// Create the decision stump
 			//createDecisionStump();
 			createStump();
 			
@@ -231,10 +231,9 @@ public void createDecisionStump() {
 			
 			// Normalize the weights of samples
 			normalizeWeights();
-			System.out.println("error = " + error);
-//			for (int s = 0; s < numofSamples; s++) {
-//				System.out.println("weightsSP = " + weightsSp[s]);
-//			}
+			
+			// Print out the K-th running times of stumps selecting.
+			System.out.println(k +" times iteration of traning process,"+" error rate = " + error);
 			
 			// Update the labels with new weights
 			updateLabels();
@@ -243,43 +242,43 @@ public void createDecisionStump() {
 			updateSamples();
 				double e = (1 - error)/error;
 				BigDecimal b = new BigDecimal(e);
-				
 				// Update the weights for the decision stumps
 				weightsZ[k] = Math.log(b.doubleValue())/Math.log(2.0);
-				//System.out.println(" Weight Z = " + weightsZ[k]);			
 			}
 			else {
 				break;
 			}
 		}
+		
+		// Normalize the weights for each stumps
 		normalizedWeightsZ();
 		for (int f = 0; f < stumpsOrder.size();f ++)
-			System.out.println("weightsZ[" + (stumpsOrder.get(f))+ "] = " + weightsZ[stumpsOrder.get(f)]);
+			System.out.println("weights for each stump[" + (stumpsOrder.get(f))+ "] = " + weightsZ[stumpsOrder.get(f)]);
 	}
 	
-	
+	/**
+	 * Prediction function used for prediction data.
+	 * 
+	 */
 	public void predictByAdaboostStumps() {
 		double[] total = new double[numofFeatures];
 		
 		for (int s = 0; s < numofPredicts; s++) {
-		{	
 			for (int f = 0; f < numofFeatures; f++)
+			{	
 				total[s] += predict_data[s][f] * weightsZ[f];
-				
 			}
 		}
-		
 		for (int s = 0; s < numofPredicts; s++) {
-			System.out.println("prediction: " + total[s]);
-				
+			System.out.println("Probability whether the sentence is Dutch or not: " + total[s]);
+			if (total[s] > 0.50)
+				System.out.println("Yes! This sentence is writen in Dutch!");
+			else
+				System.out.println("Nope! This sentence is writen in English!");
+			System.out.println("");
+			System.out.println("");
+			
 		}
-	}
-	/*
-	 * For print out the features.
-	 */
-	public void printWeightZ() {
-		for (int f = 0; f < stumpsOrder.size();f ++)
-			System.out.println("weightsZ[" + (stumpsOrder.get(f))+ "] = " + weightsZ[stumpsOrder.get(f)]);
 	}
 	
 	/*
@@ -301,7 +300,7 @@ public void createDecisionStump() {
 	}
 	
 	/*
-	 * Normalization
+	 * Normalization the weights of each sample
 	 */
 	public void normalizeWeights() {
 		double total = 0;
@@ -313,6 +312,9 @@ public void createDecisionStump() {
 		}
 	}
 	
+	/*
+	 *  Normalize the weights for each stumps
+	 */
 	public void normalizedWeightsZ() {
 		double total = 0;
 		for (int s = 0; s < numofFeatures; s++) {
@@ -323,6 +325,9 @@ public void createDecisionStump() {
 		}
 	}
 	
+	/*
+	 * This function used for updating the labels with current weights.
+	 */
 	public void updateLabels() {
 		for (int s = 0; s < numofSamples; s++) {
 			if (labels[s] != 0)
@@ -330,6 +335,10 @@ public void createDecisionStump() {
 		}
 		
 	}
+	
+	/*
+	 * This function used for updating the samples with current weights.
+	 */
 	public void updateSamples() {
 		for (int s = 0; s < numofSamples; s++) {
 			for (int f = 0; f < numofFeatures; f++) {
@@ -339,14 +348,6 @@ public void createDecisionStump() {
 		}
 	}
 	
-//	public void printHypotheses() {
-//		for (int i = 0; i < numofSamples; i++) {
-//			System.out.println(hypotheses[i][stumpsOrder.get(0)]);
-//		}
-//		for (int i = 0; i < numofSamples; i++) {
-//			System.out.println(labelsSp[i][stumpsOrder.get(0)]);
-//		}
-//	}
     public double entropy(double[] labels, ArrayList<Integer> index, double[] weightsSp, int indexOfFeatures) {
     	if (index.size() == 0) return 0;
     	double p = 0.0;
@@ -354,13 +355,8 @@ public void createDecisionStump() {
     	for (int i = 0; i < index.size(); i++) {
     		p += labels[index.get(i)];
     		w += weightsSp[index.get(i)];
-    		//System.out.print("weights = " + weightsSp[index.get(i)] + "   ");
-    		//System.out.println("");
     	}
-    	//System.out.println("p = " + p);
-    	//System.out.println("w = " + w);
     	double p_normalize = p/w;
-    	//System.out.println("p_normalize = " + p_normalize);
     	BigDecimal b = new BigDecimal(p_normalize);
     	if (p_normalize == 1.0) {
     		return 0.0;

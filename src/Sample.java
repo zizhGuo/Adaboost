@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import javax.print.attribute.standard.NumberOfDocuments;
-
 import java.math.BigDecimal;
 
 public class Sample implements Feature, Label{
@@ -70,14 +68,25 @@ public class Sample implements Feature, Label{
 		return weightsSp;
 	}
 	
+	/*
+	 * Append string at raw data
+	 * used for training
+	 */
 	public void append(String str) {
 		raw.add(str);
 	}
 	
+	/*
+	 * Load the string from data
+	 * used for prediction
+	 */
 	public void load(String str) {
 		predict_raw.add(str);
 	}
 	
+	/*
+	 * Set up the data for prediction
+	 */
 	public void setPredictionData() {
 		for (int i = 0; i < this.predict_raw.size(); i++) {
 			String[] str = predict_raw.get(i).split(" ");
@@ -101,18 +110,7 @@ public class Sample implements Feature, Label{
 			this.consonantsMoreThanThreepointFive_Predict(this.predict_sentence.get(i), i);
 		}
 	}
-	
-	public void print() {
-		for (int i = 0; i < numofPredicts; i++) {
-			for (int j = 0; j < numofFeatures; j++) {
-				// 4 spaces between each value.
-				System.out.println("predicts: " + predict_data[i][j]);
-					
-			}
-			System.out.println();
-		}
-	}
-	
+
 	/*
 	 * This function is used for process input string.
 	 */
@@ -126,6 +124,9 @@ public class Sample implements Feature, Label{
 		}
 	}
 	
+	/*
+	 * This function is used for setting up the features for training.
+	 */
 	public void setFeatures() {
 		for (int i = 0; i < sentence.size(); i++) {
 			this.ifContains_de(this.sentence.get(i), i);
@@ -141,16 +142,18 @@ public class Sample implements Feature, Label{
 		}
 	}
 	
+	/*
+	 * This function is used for setting labels with initialized weights.
+	 * 
+	 */
 	public void setLables() {
-		
-		System.out.println("what?");
-		System.out.print(" sentence size is  " + this.sentence.size());
+		//System.out.print(" sentence size is  " + this.sentence.size());
 		for (int i = 0; i < this.sentence.size(); i++) {
 		//for (int i = 0; i < this.numofSamples; i++) {
 			String[] strings = this.sentence.get(i);
 			int length = strings.length;
 			for (int j = 0; j < length; j++)
-				System.out.print(strings[j] + "  ");
+				//System.out.print(strings[j] + "  ");
 			
 			if (strings[length - 1].contains("true")) {
 				labels[i] = weightsSp[i];
@@ -159,9 +162,13 @@ public class Sample implements Feature, Label{
 				labels[i] = 0.0;
 			}
 			
-			System.out.println(" ");
+			//System.out.println(" ");
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_de_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("de")) {
@@ -172,6 +179,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_en_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("en")) {
@@ -182,6 +193,10 @@ public class Sample implements Feature, Label{
 			}
 		}	
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_een_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("een")) {
@@ -192,6 +207,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_het_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("het")) {
@@ -202,6 +221,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_van_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("van")) {
@@ -212,6 +235,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_op_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("op")) {
@@ -222,6 +249,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_ij_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contains("ij")) {
@@ -229,6 +260,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void ifContains_die_Predict(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("die")) {
@@ -239,6 +274,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void averageLengthMoreThanFive_Predict(String[] str, int indexSp) {
 		double length = 0;
 		for (int i = 0; i < str.length; i++) {
@@ -249,6 +288,10 @@ public class Sample implements Feature, Label{
 			predict_data[indexSp][8] = 1;
 		}
 	}
+	
+	/*
+	 * This function is used for setting prediction data.
+	 */
 	public void consonantsMoreThanThreepointFive_Predict(String[] str, int indexSp) {
 		double size = 0;
 		double count = 0;
@@ -271,7 +314,9 @@ public class Sample implements Feature, Label{
 			predict_data[indexSp][9] = 1;
 	}
 	
-	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_de(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("de")) {
@@ -282,6 +327,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_en(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("en")) {
@@ -292,6 +341,10 @@ public class Sample implements Feature, Label{
 			}
 		}	
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_een(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("een")) {
@@ -302,6 +355,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_het(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("het")) {
@@ -312,6 +369,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_van(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("van")) {
@@ -322,6 +383,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_op(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("op")) {
@@ -332,6 +397,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_ij(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contains("ij")) {
@@ -339,6 +408,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void ifContains_die(String[] str, int indexSp) {
 		for (int i = 0; i < str.length; i++) {
 			if (str[i].contentEquals("die")) {
@@ -349,6 +422,10 @@ public class Sample implements Feature, Label{
 			}
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void averageLengthMoreThanFive(String[] str, int indexSp) {
 		double length = 0;
 		for (int i = 0; i < str.length; i++) {
@@ -359,6 +436,10 @@ public class Sample implements Feature, Label{
 			samples[indexSp][8] = weightsSp[indexSp];
 		}
 	}
+	
+	/*
+	 * This function is used for setting training data.
+	 */
 	public void consonantsMoreThanThreepointFive(String[] str, int indexSp) {
 		double size = 0;
 		double count = 0;

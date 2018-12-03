@@ -4,7 +4,7 @@ public class ArithmeticUtils {
 	private final int DEF_DIV_SCALE = 2;
 
     /**
-     * 
+     * Summation.
      *
      * @param v1 
      * @param v2 
@@ -18,7 +18,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Summation.
      *
      * @param v1
      * @param v2
@@ -31,7 +31,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Summation.
      *
      * @param v1    
      * @param v2    
@@ -49,7 +49,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Subtraction.
      *
      * @param v1 
      * @param v2 
@@ -62,7 +62,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Subtraction.
      *
      * @param v1 
      * @param v2 
@@ -75,7 +75,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Subtraction.
      *
      * @param v1    
      * @param v2    
@@ -93,7 +93,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Multiplication.
      *
      * @param v1 
      * @param v2 
@@ -106,7 +106,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Multiplication.
      *
      * @param v1 
      * @param v2 
@@ -120,7 +120,7 @@ public class ArithmeticUtils {
 
 
     /**
-     * 
+     * Multiplication.
      *
      * @param v1    
      * @param v2 
@@ -134,7 +134,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Multiplication.
      *
      * @param v1 
      * @param v2 
@@ -152,7 +152,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Division.
      * 
      *
      * @param v1 
@@ -165,7 +165,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Division.
      * 
      *
      * @param v1 
@@ -184,7 +184,7 @@ public class ArithmeticUtils {
     
     
     /**
-     * 
+     * Division.
      * 
      *
      * @param v1 
@@ -202,7 +202,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Round.
      *
      * @param v 
      * @param scale 
@@ -217,7 +217,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Round.
      *
      * @param v 
      * @param scale 
@@ -234,7 +234,7 @@ public class ArithmeticUtils {
 
 
     /**
-     * 
+     * Round.
      *
      * @param v1 
      * @param v2 
@@ -252,7 +252,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Getting remainder.
      *
      * @param v1 
      * @param v2 
@@ -268,7 +268,7 @@ public class ArithmeticUtils {
     }
 
     /**
-     * 
+     * Comparation.
      *
      * @param v1 
      * @param v2 
