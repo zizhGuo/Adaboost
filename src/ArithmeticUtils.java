@@ -1,5 +1,15 @@
+/***
+ * Foundation of Intelligent System. 
+ * Lab 2
+ * 
+ * @author Zizhun Guo
+ */
 import java.math.BigDecimal;
-
+/***
+ * The Class for math calculating.
+ * @author Zizhun Guo
+ *
+ */
 public class ArithmeticUtils {
 	private final int DEF_DIV_SCALE = 2;
 

@@ -1,3 +1,10 @@
+
+/***
+ * Foundation of Intelligent System. 
+ * Lab 2
+ * 
+ * @author Zizhun Guo
+ */
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -6,7 +13,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 
-
+/***
+ * The Class for building the decision trees.
+ * Unluckily, this class is half way done.
+ * @author Zizhun Guo
+ *
+ */
 public class DecisionTree {
 	int numofSamples;
 	int numofFeatures;
@@ -82,7 +94,6 @@ public class DecisionTree {
 	}
 }
 
-// A Node class for store the all its 
 class TreeSample{
 	private Map<String, Object> attributes = new HashMap<String, Object>();
 	 

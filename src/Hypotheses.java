@@ -1,8 +1,18 @@
+/***
+ * Foundation of Intelligent System. 
+ * Lab 2
+ * 
+ * @author Zizhun Guo
+ */
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import org.ietf.jgss.Oid;
 
+/***
+ * The Class for building the adaboost stumps
+ * @author Zizhun Guo
+ *
+ */
 public class Hypotheses {
 	
 	// **************************************** START ******************************************

@@ -1,7 +1,18 @@
+/***
+ * Foundation of Intelligent System. 
+ * Lab 2
+ * 
+ * @author Zizhun Guo
+ */
 import java.util.ArrayList;
 
 import java.math.BigDecimal;
 
+/***
+ * The Class for storing the samples.
+ * @author Zizhun Guo
+ *
+ */
 public class Sample implements Feature, Label{
 	
 	ArrayList<String> raw;
